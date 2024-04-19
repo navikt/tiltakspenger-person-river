@@ -1,1 +1,1 @@
-rootProject.name = "tiltakspenger-person"
+rootProject.name = "tiltakspenger-person-river"
