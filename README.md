@@ -1,6 +1,7 @@
-tiltakspenger-person
+tiltakspenger-person-river
 ================
-Løser behov for tiltakspenger-vedtak.
+Rapids & rivers app til tiltakspenger-person. 
+Denne appen kaller PDL api til tiltakspenger-person og legger den på kafka/rapids & rivers.
 
 En del av satsningen ["Flere i arbeid – P4"](https://memu.no/artikler/stor-satsing-skal-fornye-navs-utdaterte-it-losninger-og-digitale-verktoy/)
 
