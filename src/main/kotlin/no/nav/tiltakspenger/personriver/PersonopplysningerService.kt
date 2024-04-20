@@ -1,6 +1,5 @@
 package no.nav.tiltakspenger.personriver
 
-import arrow.core.getOrElse
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
@@ -10,17 +9,15 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
-import no.nav.tiltakspenger.libs.person.Feilmelding
 import no.nav.tiltakspenger.libs.person.PersonRespons
-import no.nav.tiltakspenger.personriver.pdl.PDLClientError
-import no.nav.tiltakspenger.personriver.pdl.PDLService
+import no.nav.tiltakspenger.personriver.person.PersonClient
 
 private val LOG = KotlinLogging.logger {}
 private val SECURELOG = KotlinLogging.logger("tjenestekall")
 
 class PersonopplysningerService(
     rapidsConnection: RapidsConnection,
-    val pdlService: PDLService,
+    val personClient: PersonClient,
 ) : River.PacketListener {
 
     companion object {
@@ -50,11 +47,8 @@ class PersonopplysningerService(
             ) {
                 val ident = packet["ident"].asText()
                 val respons: PersonRespons = runBlocking(MDCContext()) {
-                    pdlService.hentPerson(ident)
-                }.map { person ->
-                    PersonRespons(person = person)
-                }.getOrElse { håndterFeil(it) }
-
+                    personClient.hentPerson(ident)
+                }
                 packet["@løsning"] = mapOf(
                     BEHOV.PERSONOPPLYSNINGER to respons,
                 )
@@ -64,59 +58,6 @@ class PersonopplysningerService(
         }.onFailure {
             loggVedFeil(it, packet)
         }.getOrThrow()
-    }
-
-    private fun håndterFeil(clientError: PDLClientError): PersonRespons {
-        when (clientError) {
-            is PDLClientError.UkjentFeil -> {
-                LOG.error { clientError.errors }
-                throw IllegalStateException("Uhåndtert feil")
-            }
-
-            PDLClientError.NavnKunneIkkeAvklares -> {
-                LOG.error { "Navn kunne ikke avklares, DETTE SKAL IKKE SKJE" }
-                throw IllegalStateException("Navn kunne ikke avklares")
-            }
-
-            PDLClientError.FødselKunneIkkeAvklares -> {
-                LOG.error { "Fødsel kunne ikke avklares, DETTE SKAL IKKE SKJE" }
-                throw IllegalStateException("Fødsel kunne ikke avklares")
-            }
-
-            PDLClientError.AdressebeskyttelseKunneIkkeAvklares -> {
-                LOG.error { "Adressebeskyttelse kunne ikke avklares, DETTE SKAL IKKE SKJE" }
-                throw IllegalStateException("Adressebeskyttelse kunne ikke avklares")
-            }
-
-            is PDLClientError.NetworkError -> {
-                throw IllegalStateException("PDL er nede!!", clientError.exception)
-            }
-
-            PDLClientError.IngenNavnFunnet -> {
-                LOG.error { "Fant ingen navn i PDL, DETTE SKAL IKKE SKJE" }
-                throw IllegalStateException("Fant ingen navn i PDL")
-            }
-
-            PDLClientError.FantIkkePerson,
-            PDLClientError.ResponsManglerPerson,
-            -> {
-                LOG.error { "Respons fra PDL inneholdt ikke person" }
-                return PersonRespons(feil = Feilmelding.PersonIkkeFunnet)
-            }
-
-            is PDLClientError.SerializationException -> {
-                throw IllegalStateException("Feil ved serializering", clientError.exception)
-            }
-
-            PDLClientError.GraderingKunneIkkeAvklares -> {
-                LOG.error { "Kunne ikke avklare gradering" }
-                throw IllegalStateException("Kunne ikke avklare gradering")
-            }
-
-            is PDLClientError.AzureAuthFailureException -> {
-                throw IllegalStateException("Kunne ikke autentisere mot Azure", clientError.exception)
-            }
-        }
     }
 
     private fun loggVedInngang(packet: JsonMessage) {

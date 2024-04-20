@@ -4,8 +4,7 @@ import mu.KotlinLogging
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.tiltakspenger.personriver.auth.AzureTokenProvider
-import no.nav.tiltakspenger.personriver.pdl.PDLClient
-import no.nav.tiltakspenger.personriver.pdl.PDLService
+import no.nav.tiltakspenger.personriver.person.PersonClient
 
 fun main() {
     System.setProperty("logback.configurationFile", "egenLogback.xml")
@@ -18,11 +17,11 @@ fun main() {
     }
     val tokenProvider = AzureTokenProvider()
     log.info { "Starting tiltakspenger-person" }
-    RapidApplication.create(no.nav.tiltakspenger.personriver.Configuration.rapidsAndRivers)
+    RapidApplication.create(Configuration.rapidsAndRivers)
         .apply {
-            no.nav.tiltakspenger.personriver.PersonopplysningerService(
+            PersonopplysningerService(
                 rapidsConnection = this,
-                pdlService = PDLService(pdlClient = PDLClient(getToken = tokenProvider::getToken)),
+                personClient = PersonClient(getToken = tokenProvider::getToken),
             )
 
             register(object : RapidsConnection.StatusListener {

@@ -27,4 +27,4 @@ spec:
   accessPolicy:
     outbound:
       external:
-        - host: {{ urlPdl }}
+        - host: {{ tpPersonUrl }}

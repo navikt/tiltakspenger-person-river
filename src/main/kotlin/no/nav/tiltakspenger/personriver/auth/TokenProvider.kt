@@ -45,7 +45,6 @@ class AzureTokenProvider(
                 append("grant_type", "client_credentials")
                 append("client_id", config.clientId)
                 append("client_secret", config.clientSecret)
-                append("scope", config.scope)
             },
         ).body<OAuth2AccessTokenResponse>().let {
             tokenCache.update(
@@ -75,7 +74,6 @@ class AzureTokenProvider(
     }
 
     data class OauthConfig(
-        val scope: String,
         val clientId: String,
         val clientSecret: String,
         val wellknownUrl: String,
