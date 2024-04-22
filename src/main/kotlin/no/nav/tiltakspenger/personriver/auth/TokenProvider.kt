@@ -42,9 +42,10 @@ class AzureTokenProvider(
         return httpClient.submitForm(
             url = wellknown().tokenEndpoint,
             formParameters = Parameters.build {
-                append("grant_type", "client_credentials")
+                append("scope", config.scope)
                 append("client_id", config.clientId)
                 append("client_secret", config.clientSecret)
+                append("grant_type", "client_credentials")
             },
         ).body<OAuth2AccessTokenResponse>().let {
             tokenCache.update(
@@ -74,6 +75,7 @@ class AzureTokenProvider(
     }
 
     data class OauthConfig(
+        val scope: String,
         val clientId: String,
         val clientSecret: String,
         val wellknownUrl: String,

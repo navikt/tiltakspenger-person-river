@@ -33,19 +33,22 @@ internal object Configuration {
     private val localProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.LOCAL.toString(),
-            "personBaseUrl" to "http://tiltakspenger-person",
+            "PERSON_BASE_URL" to "http://tiltakspenger-person",
+            "PERSON_SCOPE" to "api://dev-gcp.tpts.tiltakspenger-person/.default",
         ),
     )
     private val devProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "personBaseUrl" to "http://tiltakspenger-person",
+            "PERSON_BASE_URL" to "http://tiltakspenger-person",
+            "PERSON_SCOPE" to "api://dev-gcp.tpts.tiltakspenger-person/.default",
         ),
     )
     private val prodProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.PROD.toString(),
-            "personBaseUrl" to "http://tiltakspenger-person",
+            "PERSON_BASE_URL" to "http://tiltakspenger-person",
+            "PERSON_SCOPE" to "api://prod-gcp.tpts.tiltakspenger-person/.default",
         ),
     )
 
@@ -62,6 +65,7 @@ internal object Configuration {
     }
 
     fun oauthConfig(
+        scope: String = config()[Key("PERSON_SCOPE", stringType)],
         clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
         clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
         wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
@@ -69,9 +73,10 @@ internal object Configuration {
         clientId = clientId,
         clientSecret = clientSecret,
         wellknownUrl = wellknownUrl,
+        scope = scope,
     )
 
-    fun personKlientConfig(baseUrl: String = config()[Key("personBaseUrl", stringType)]) =
+    fun personKlientConfig(baseUrl: String = config()[Key("PERSON_BASE_URL", stringType)]) =
         PersonClient.PersonKlientConfig(baseUrl = baseUrl)
 }
 
