@@ -2,13 +2,13 @@ val javaVersion = JavaVersion.VERSION_21
 val ktorVersion = "2.3.10"
 val kotestVersion = "5.8.0"
 val jacksonVersion = "2.16.0"
-val mockkVersion = "1.13.8"
+val mockkVersion = "1.13.10"
 val felleslibVersion = "0.0.93"
 
 plugins {
     application
     kotlin("jvm") version "1.9.22"
-    id("com.diffplug.spotless") version "6.23.3"
+    id("com.diffplug.spotless") version "6.25.0"
     // id("ca.cutterslade.analyze") version "1.9.1"
 }
 
@@ -27,9 +27,9 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation("com.github.navikt.tiltakspenger-libs:person-dtos:$felleslibVersion")
     implementation("com.github.navikt:rapids-and-rivers:2023101613431697456627.0cdd93eb696f")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.8.0")
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
-    implementation("ch.qos.logback:logback-classic:1.4.14")
+    implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("org.jetbrains:annotations:24.1.0")
     implementation("com.natpryce:konfig:1.6.10.0")
