@@ -26,5 +26,7 @@ spec:
       enabled: true
   accessPolicy:
     outbound:
-      external:
-        - host: {{ urlPdl }}
+      rules:
+        - application: tiltakspenger-person
+          namespace: tpts
+          cluster: {{ cluster }}

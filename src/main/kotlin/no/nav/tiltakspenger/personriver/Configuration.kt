@@ -7,7 +7,7 @@ import com.natpryce.konfig.Key
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import no.nav.tiltakspenger.personriver.auth.AzureTokenProvider
-import no.nav.tiltakspenger.personriver.pdl.PDLClient
+import no.nav.tiltakspenger.personriver.person.PersonClient
 
 internal object Configuration {
 
@@ -33,22 +33,22 @@ internal object Configuration {
     private val localProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.LOCAL.toString(),
-            "pdlScope" to "api://dev-fss.pdl.pdl-api/.default",
-            "pdlBaseUrl" to "https://pdl-api.dev-fss-pub.nais.io/graphql",
+            "PERSON_BASE_URL" to "http://tiltakspenger-person",
+            "PERSON_SCOPE" to "api://dev-gcp.tpts.tiltakspenger-person/.default",
         ),
     )
     private val devProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "pdlScope" to "api://dev-fss.pdl.pdl-api/.default",
-            "pdlBaseUrl" to "https://pdl-api.dev-fss-pub.nais.io/graphql",
+            "PERSON_BASE_URL" to "http://tiltakspenger-person",
+            "PERSON_SCOPE" to "api://dev-gcp.tpts.tiltakspenger-person/.default",
         ),
     )
     private val prodProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.PROD.toString(),
-            "pdlScope" to "api://prod-fss.pdl.pdl-api/.default",
-            "pdlBaseUrl" to "https://pdl-api.prod-fss-pub.nais.io/graphql",
+            "PERSON_BASE_URL" to "http://tiltakspenger-person",
+            "PERSON_SCOPE" to "api://prod-gcp.tpts.tiltakspenger-person/.default",
         ),
     )
 
@@ -64,20 +64,28 @@ internal object Configuration {
         }
     }
 
+    fun applicationProfile() = when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getProperty("NAIS_CLUSTER_NAME")) {
+        "dev-gcp" -> Profile.DEV
+        "prod-gcp" -> Profile.PROD
+        else -> Profile.LOCAL
+    }
+
+    fun kafkaBootstrapLocal(): String = config()[Key("KAFKA_BROKERS", stringType)]
+
     fun oauthConfig(
-        scope: String = config()[Key("pdlScope", stringType)],
+        scope: String = config()[Key("PERSON_SCOPE", stringType)],
         clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
         clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
         wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
     ) = AzureTokenProvider.OauthConfig(
-        scope = scope,
         clientId = clientId,
         clientSecret = clientSecret,
         wellknownUrl = wellknownUrl,
+        scope = scope,
     )
 
-    fun pdlKlientConfig(baseUrl: String = config()[Key("pdlBaseUrl", stringType)]) =
-        PDLClient.PdlKlientConfig(baseUrl = baseUrl)
+    fun personKlientConfig(baseUrl: String = config()[Key("PERSON_BASE_URL", stringType)]) =
+        PersonClient.PersonKlientConfig(baseUrl = baseUrl)
 }
 
 enum class Profile {
