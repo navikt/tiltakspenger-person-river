@@ -7,7 +7,7 @@ import no.nav.tiltakspenger.personriver.auth.AzureTokenProvider
 import no.nav.tiltakspenger.personriver.person.PersonClient
 
 fun main() {
-    System.setProperty("logback.configurationFile", "egenLogback.xml")
+    System.setProperty("logback.configurationFile", Configuration.logbackConfigurationFile())
     val log = KotlinLogging.logger {}
     val securelog = KotlinLogging.logger("tjenestekall")
 
