@@ -33,6 +33,7 @@ internal object Configuration {
     private val localProperties = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.LOCAL.toString(),
+            "logback.configurationFile" to "logback.local.xml",
             "PERSON_BASE_URL" to "http://tiltakspenger-person",
             "PERSON_SCOPE" to "api://dev-gcp.tpts.tiltakspenger-person/.default",
         ),
@@ -70,6 +71,7 @@ internal object Configuration {
         else -> Profile.LOCAL
     }
 
+    fun logbackConfigurationFile() = config()[Key("logback.configurationFile", stringType)]
     fun kafkaBootstrapLocal(): String = config()[Key("KAFKA_BROKERS", stringType)]
 
     fun oauthConfig(

@@ -1,13 +1,13 @@
 val javaVersion = JavaVersion.VERSION_21
-val ktorVersion = "2.3.10"
-val kotestVersion = "5.8.1"
-val jacksonVersion = "2.17.0"
+val ktorVersion = "2.3.11"
+val kotestVersion = "5.9.0"
+val jacksonVersion = "2.17.1"
 val mockkVersion = "1.13.10"
 val felleslibVersion = "0.0.93"
 
 plugins {
     application
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "1.9.24"
     id("com.diffplug.spotless") version "6.25.0"
     // id("ca.cutterslade.analyze") version "1.9.1"
 }
