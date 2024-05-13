@@ -24,6 +24,7 @@ internal object Configuration {
 
     private val otherDefaultProperties = mapOf(
         "application.httpPort" to 8080.toString(),
+        "logback.configurationFile" to "logback.xml",
         "AZURE_APP_CLIENT_ID" to System.getenv("AZURE_APP_CLIENT_ID"),
         "AZURE_APP_CLIENT_SECRET" to System.getenv("AZURE_APP_CLIENT_SECRET"),
         "AZURE_APP_WELL_KNOWN_URL" to System.getenv("AZURE_APP_WELL_KNOWN_URL"),
