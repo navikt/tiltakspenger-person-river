@@ -22,6 +22,7 @@ For å bygge artifaktene:
 
 ---
 
+
 # Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan stilles som issues her på GitHub.
