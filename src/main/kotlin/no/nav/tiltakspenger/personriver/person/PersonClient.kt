@@ -5,7 +5,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.accept
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.header
-import io.ktor.client.request.prepareGet
+import io.ktor.client.request.preparePost
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -29,7 +29,7 @@ class PersonClient(
 
     suspend fun hentPerson(ident: String): PersonRespons {
         val httpResponse =
-            httpClient.prepareGet("${personKlientConfig.baseUrl}/azure/pdl/personalia") {
+            httpClient.preparePost("${personKlientConfig.baseUrl}/azure/pdl/personalia") {
                 header(navCallIdHeader, "tiltakspenger-person-river")
                 bearerAuth(getToken())
                 accept(ContentType.Application.Json)
