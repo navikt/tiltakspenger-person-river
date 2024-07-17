@@ -1,3 +1,5 @@
+# Dette repo arkiveres da vi gjør kall direkte fra vedtak og soknad-api i stedet
+
 tiltakspenger-person-river
 ================
 Rapids & rivers app til tiltakspenger-person. 
